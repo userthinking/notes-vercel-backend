@@ -1,10 +1,16 @@
 import Note from '../models/note.model.js'
 import User from '../models/user.model.js'
 import sendError from '../utils/sendError.util.js'
+import mongoose from 'mongoose'
 
 // GET /api/notes
 const getAllNotes = async (req, res) => {
     try {
+        // Check if database is connected
+        if (mongoose.connection.readyState !== 1) {
+            return sendError(res, 503, 'Database not connected')
+        }
+
         const notes = await Note.find({ userId: req.userId }).sort({
             createdAt: -1,
         })
@@ -22,6 +28,11 @@ const getAllNotes = async (req, res) => {
 // GET /api/notes/:id
 const getNoteByID = async (req, res) => {
     try {
+        // Check if database is connected
+        if (mongoose.connection.readyState !== 1) {
+            return sendError(res, 503, 'Database not connected')
+        }
+
         const { id } = req.params
 
         const note = await Note.findById(id)
@@ -41,6 +52,11 @@ const getNoteByID = async (req, res) => {
 // POST /api/notes
 const postNoteData = async (req, res) => {
     try {
+        // Check if database is connected
+        if (mongoose.connection.readyState !== 1) {
+            return sendError(res, 503, 'Database not connected')
+        }
+
         const { title, body, bgColor } = req.body
 
         if (!title?.trim() || !body?.trim()) {
@@ -72,6 +88,11 @@ const postNoteData = async (req, res) => {
 // DELETE /api/notes/:id
 const deleteNote = async (req, res) => {
     try {
+        // Check if database is connected
+        if (mongoose.connection.readyState !== 1) {
+            return sendError(res, 503, 'Database not connected')
+        }
+
         const { id } = req.params
 
         const note = await Note.findOne({ _id: id, userId: req.userId })
@@ -92,6 +113,11 @@ const deleteNote = async (req, res) => {
 // PUT /api/notes/:id
 const updateNote = async (req, res) => {
     try {
+        // Check if database is connected
+        if (mongoose.connection.readyState !== 1) {
+            return sendError(res, 503, 'Database not connected')
+        }
+
         const { id } = req.params
         const { title, body, bgColor } = req.body
 

@@ -2,9 +2,15 @@ import User from '../models/user.model.js'
 import createToken from '../utils/createToken.js'
 import sendError from '../utils/sendError.util.js'
 import bcrypt from 'bcrypt'
+import mongoose from 'mongoose'
 
 const getAllUsers = async (req, res) => {
     try {
+        // Check if database is connected
+        if (mongoose.connection.readyState !== 1) {
+            return sendError(res, 503, 'Database not connected')
+        }
+
         const users = await User.find({})
         if (users.length === 0)
             return res.status(200).json({
@@ -24,6 +30,11 @@ const getAllUsers = async (req, res) => {
 
 const getUserByID = async (req, res) => {
     try {
+        // Check if database is connected
+        if (mongoose.connection.readyState !== 1) {
+            return sendError(res, 503, 'Database not connected')
+        }
+
         const { id } = req.params
 
         const user = await User.findById(id)
@@ -43,6 +54,11 @@ const getUserByID = async (req, res) => {
 
 const signup = async (req, res) => {
     try {
+        // Check if database is connected
+        if (mongoose.connection.readyState !== 1) {
+            return sendError(res, 503, 'Database not connected')
+        }
+
         const { username, password } = req.body
 
         if (!username || !password)
@@ -71,6 +87,11 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
     try {
+        // Check if database is connected
+        if (mongoose.connection.readyState !== 1) {
+            return sendError(res, 503, 'Database not connected')
+        }
+
         const { username, password } = req.body
 
         if (!username || !password)
